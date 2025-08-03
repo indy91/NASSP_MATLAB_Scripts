@@ -5,7 +5,7 @@ function GenerateSaturnIBLVDCLaunchAzimuthPolynomial
 
   %INPUTS
   LAT = 28.627151;  %Launchpad latitude
-  INCL = 51.78;      %Desired orbit inclination
+  INCL = 51.78;     %Desired orbit inclination
   ASC = 1;          %1 = ascending node launch, 0 = descending node launch
   V_ORBIT = 7835;   %Velocity at orbital insertion
 
@@ -52,7 +52,7 @@ function GenerateSaturnIBLVDCLaunchAzimuthPolynomial
   COEF = A^-1*(AZL_arr*DEG);
 
   %Output prints
-  printf("\nSATURN IB LVDC LAUNCH AZIMUTH POLYNOMIAL CALCULATOR 1.0\n");
+  printf("\nSATURN IB LVDC LAUNCH AZIMUTH POLYNOMIAL CALCULATOR 1.1\n");
    printf("\nLaunch latitude %.3f deg, Inclination %.3f deg\n", LAT*DEG, INCL*DEG);
   printf("\nSimulated launches:\n");
   for i=1:4
@@ -60,10 +60,12 @@ function GenerateSaturnIBLVDCLaunchAzimuthPolynomial
     printf("Launch Azimuth %.4f deg, descending node angle %.4f deg\n", AZL_arr(i)*DEG, Lambda_arr(i)*DEG);
   endfor
 
-  printf("\nCoefficients:\n");
+  printf("\nLVDC Coefficients:\n");
   for i=1:4
     printf("LVDC_Ax[%d] %f\n",i-1,COEF(i));
   endfor
+  printf("\nRTCC Constants:\n");
+  printf("LAZCOE %f %f %f %f\n",COEF(1)*RAD, COEF(2), COEF(3), COEF(4)*DEG);
 
 endfunction
 
@@ -107,9 +109,12 @@ endfunction
 
     %Descending node angle
     bias = EARTH_RATE*DTOPT;
-    dlng = atan(sin(LAT_C)*tan(beta));
+    dlng = atan2(sin(LAT_C),cos(beta)/sin(beta));
     if dlng < 0
       dlng = dlng + 2*pi;
+    endif
+    if pi - beta < 0
+      dlng = pi + dlng;
     endif
     h = pi - dlng + bias; %lng
     if h < 0
