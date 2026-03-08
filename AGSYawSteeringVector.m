@@ -12,11 +12,11 @@ function AGSYawSteeringVector
   WBX = DoubleToAEA(vec(1));
   WBY = DoubleToAEA(vec(2));
   WBZ = DoubleToAEA(vec(3));
+
+  % To DEDA
   WBX_DEDA = AEAToDEDA(WBX);
   WBY_DEDA = AEAToDEDA(WBY);
   WBZ_DEDA = AEAToDEDA(WBZ);
-
-  % To DEDA
 
   fprintf("\nInput angle: %f degrees\n\n", Angle);
   fprintf("NAME  AEA OCT.  DEDA     AEA VALUE\n");
