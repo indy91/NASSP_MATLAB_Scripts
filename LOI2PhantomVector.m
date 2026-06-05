@@ -19,7 +19,7 @@ function LOI2PhantomVector()
   % Apollo 11 LOI-2
   GMTBASE       = 40418.0;
   t_launch      = 13*3600 + 32*60;
-  t_land        = 102*3600 + 47*60 + 11 - 4.2*60;
+  t_land        = 102*3600 + 47*60 + 11 - 7.5*60;
   lat_LS        = 0.71388889;
   lng_LS        = 23.70777778;
   alt_LS        = -1.44;
