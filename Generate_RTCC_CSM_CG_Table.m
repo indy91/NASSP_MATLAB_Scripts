@@ -115,7 +115,7 @@ function Generate_RTCC_CSM_CG_Table
     elseif OutputFormat == 1
       printf("MHVCCG %d %.2f %f %f %f\n", i-1,Mass,CG(1), CG(2), CG(3));
     elseif OutputFormat == 2
-      printf("M11,CSM,%d,%d,%.2f,%f,%f,%f;\n",Num, i, Mass, CG(1), CG(2), CG(3));
+      printf("M11,C,%d,%d,%.2f,%f,%f,%f;\n",Num, i, Mass, CG(1), CG(2), CG(3));
     else
       printf("MHVCCG.Weight[%d] = %.2f*0.453597;\nMHVCCG.CG[%d] = _V(%f, %f, %f)*0.0254;\n", i-1,Mass,i-1,CG(1), CG(2), CG(3));
     endif
