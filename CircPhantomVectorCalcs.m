@@ -99,7 +99,9 @@ function CircPhantomVectorCalcs(GMTBASE, t_launch, t_land, lat_LS, lng_LS, alt_L
   HRS_LOI2 = floor(GMT_LOI2/3600.0);
   MIN_LOI2 = floor(GMT_LOI2/60.0 - HRS_LOI2*60.0);
   SECS_LOI2 = GMT_LOI2 - MIN_LOI2*60.0 - HRS_LOI2*3600.0;
-
+  [r_peri, r_apo] = periapo(R_out,V_out,Constants.mu);
+  h_peri = r_peri - r_LS;
+  h_apo = r_apo - r_LS;
 
   seconds2 = time();
   printf("\nThe calculation took %f seconds to complete\n", seconds2 - seconds1);
@@ -110,7 +112,8 @@ function CircPhantomVectorCalcs(GMTBASE, t_launch, t_land, lat_LS, lng_LS, alt_L
   printf("\nOutput State Vector in ecliptic coordinates:\n");
   printf("Time (MJD): %f\n", MJD_LOI2);
   printf("%f %f %f %f %f %f\n\n", R_LOI2(1), R_LOI2(2), R_LOI2(3), V_LOI2(1), V_LOI2(2), V_LOI2(3));
-  printf("MED Format:\n");
+  printf("HA %f HP %f\n", h_apo/1852.0,h_peri/1852.0);
+  printf("\nMED Format:\n");
   printf("S84,LEM,%.8f,%.8f,%.8f,%.8f,%.8f,%.8f,%.0f:%.0f:%05.2f,ILHU001,MCI;\n\n", R_out_ER(1), R_out_ER(2), R_out_ER(3), V_out_ER(1), V_out_ER(2), V_out_ER(3), HRS_LOI2, MIN_LOI2, SECS_LOI2);
 
   function f = phi(x)
@@ -349,6 +352,16 @@ function M = J2000EclToBRCS(epoch)
 	% Calculate the rotation matrix between J2000 and mean Besselian of epoch coordinate systems
 	MJD = MJDOfNBYEpoch(epoch);
 	M = J2000EclToBRCSMJD(MJD);
+endfunction
+
+function [r_peri, r_apo] = periapo(R,V,mu)
+  H=cross(R,V);
+  Ex = cross(V,H)/mu-R/norm(R);
+  e=norm(Ex);
+  epsilon = norm(V)^2/2-mu/norm(R);
+  a=-mu/2/epsilon;
+  r_peri = (1-e)*a;
+  r_apo = (1+e)*a;
 endfunction
 
 function accel = NASSP_RTCC_Gravity_Model(Constants, R, MJD, GMD, GMO)
